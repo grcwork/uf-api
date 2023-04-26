@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import date
-import sched
 
 
 class HTMLTable:
@@ -29,10 +28,9 @@ class HTMLTable:
 
 
 database = {}
-s = sched.scheduler()
 
 
-def update_year(year):
+def update_year(year, database):
     url = f"https://www.sii.cl/valores_y_fechas/uf/uf{year}.htm"
     table = HTMLTable(url, "table_export")
     data = table.scraping()
@@ -40,6 +38,4 @@ def update_year(year):
 
 
 for year in range(2013, date.today().year + 1):
-    update_year(year)
-
-s.enter(3600, 1, update_year, argument=(date.today().year))
+    update_year(year, database)

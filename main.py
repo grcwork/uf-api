@@ -1,8 +1,15 @@
 from fastapi import FastAPI, Response
-from scrapping import database
-from datetime import datetime
+from scrapping import database, update_year
+import datetime
+from fastapi_utils.tasks import repeat_every
 
 app = FastAPI()
+
+
+@app.on_event("startup")
+@repeat_every(seconds=3600, wait_first=True)
+def pull_new_data():
+    update_year(datetime.date.today().year, database)
 
 
 @app.get("/")
@@ -14,7 +21,7 @@ def welcome():
 def get_uf_value(date: str, response: Response):
 
     try:
-        parsed_date = datetime.strptime(date, '%Y%m%d')
+        parsed_date = datetime.datetime.strptime(date, '%Y%m%d')
 
         year = parsed_date.year
         month = parsed_date.month

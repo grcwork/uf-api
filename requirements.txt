@@ -2,4 +2,5 @@ requests
 lxml
 beautifulsoup4
 fastapi
+fastapi-utils
 uvicorn
